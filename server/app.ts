@@ -9,6 +9,9 @@ import express from 'express';
 export function createApp() {
   const app = express();
   const productsPath = fileURLToPath(new URL('./data/products.json', import.meta.url));
+  const productImagesPath = fileURLToPath(
+    new URL('./data/product-images.json', import.meta.url),
+  );
   const clientPath = fileURLToPath(new URL('../client', import.meta.url));
 
   app.use(cors());
@@ -21,6 +24,15 @@ export function createApp() {
   app.get('/api/products', async (_request, response, next) => {
     try {
       const source = await readFile(productsPath, 'utf8');
+      response.json(JSON.parse(source));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get('/api/product-images', async (_request, response, next) => {
+    try {
+      const source = await readFile(productImagesPath, 'utf8');
       response.json(JSON.parse(source));
     } catch (error) {
       next(error);

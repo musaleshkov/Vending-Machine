@@ -1,0 +1,28 @@
+[
+  {
+    "id": "sparkling-water",
+    "label": "Sparkling water",
+    "url": "/products/sparkling-water.png"
+  },
+  { "id": "orange-juice", "label": "Orange juice", "url": "/products/orange-juice.png" },
+  {
+    "id": "chocolate-bar",
+    "label": "Chocolate bar",
+    "url": "/products/chocolate-bar.png"
+  },
+  {
+    "id": "trail-mix",
+    "label": "Trail mix",
+    "url": "/products/trail-mix.png"
+  },
+  {
+    "id": "iced-tea",
+    "label": "Iced tea",
+    "url": "/products/iced-tea.png"
+  },
+  {
+    "id": "crackers",
+    "label": "Crackers",
+    "url": "/products/crackers.png"
+  }
+]

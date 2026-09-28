@@ -1,5 +1,6 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 
+import { fetchProductImages, type ProductImageOption } from '../api/productImagesApi';
 import { centsToEuros, parsePriceToCents } from '../domain/money';
 import {
   MAX_QUANTITY,
@@ -19,10 +20,30 @@ const EMPTY_DRAFT: ProductDraft = { name: '', priceCents: 100, quantity: 1 };
 export function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
   const [draft, setDraft] = useState<ProductDraft>(
     product
-      ? { name: product.name, priceCents: product.priceCents, quantity: product.quantity }
+      ? {
+          name: product.name,
+          priceCents: product.priceCents,
+          quantity: product.quantity,
+          category: product.category,
+          image: product.image,
+        }
       : EMPTY_DRAFT,
   );
   const [errors, setErrors] = useState<ValidationResult['errors']>({});
+  const [imageOptions, setImageOptions] = useState<ProductImageOption[]>([]);
+  const [imagesUnavailable, setImagesUnavailable] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchProductImages(controller.signal)
+      .then((options) => setImageOptions(options))
+      .catch((error: unknown) => {
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          setImagesUnavailable(true);
+        }
+      });
+    return () => controller.abort();
+  }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,6 +61,52 @@ export function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
 
   return (
     <form className="product-form" onSubmit={handleSubmit} noValidate>
+      <fieldset className="product-image-picker">
+        <legend>Product image</legend>
+        <div className="product-image-picker__content">
+          <div className="product-image-preview" data-empty={!draft.image}>
+            {draft.image ? (
+              <img src={draft.image} alt="Selected product preview" />
+            ) : (
+              <span aria-hidden="true">＋</span>
+            )}
+          </div>
+          <div className="product-image-picker__controls">
+            <label htmlFor="product-image">Image path or URL</label>
+            <input
+              id="product-image"
+              value={draft.image ?? ''}
+              placeholder="Choose a server image or enter a URL"
+              onChange={(event) =>
+                setDraft({ ...draft, image: event.target.value || undefined })
+              }
+              autoComplete="off"
+            />
+            {imagesUnavailable && (
+              <p className="image-catalog-note">
+                Server images are unavailable. You can still enter an image URL.
+              </p>
+            )}
+          </div>
+        </div>
+        {imageOptions.length > 0 && (
+          <div className="server-image-gallery" aria-label="Server product images">
+            {imageOptions.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className={draft.image === option.url ? 'is-selected' : ''}
+                aria-pressed={draft.image === option.url}
+                onClick={() => setDraft({ ...draft, image: option.url })}
+              >
+                <img src={option.url} alt="" />
+                <span>{option.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </fieldset>
+
       <div className="field field--wide">
         <label htmlFor="product-name">Product name</label>
         <input

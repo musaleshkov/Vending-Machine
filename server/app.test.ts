@@ -30,6 +30,17 @@ describe('mock API', () => {
     expect(response.body.length).toBeGreaterThan(0);
   });
 
+  it('serves the product image catalog', async () => {
+    const app = createApp();
+    const response = await request(app).get('/api/product-images');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ url: '/products/sparkling-water.png' }),
+      ]),
+    );
+  });
+
   it('serves the client application for html requests', async () => {
     const app = createApp();
     const response = await request(app).get('/').set('Accept', 'text/html');

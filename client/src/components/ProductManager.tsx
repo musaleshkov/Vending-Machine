@@ -85,9 +85,13 @@ export function ProductManager({
         {products.map((product) => (
           <article className="inventory-row" key={product.id}>
             <div className="inventory-row__identity">
-              <span className="inventory-row__mark" aria-hidden="true">
-                {product.name.slice(0, 1).toUpperCase()}
-              </span>
+              {product.image ? (
+                <img className="inventory-row__image" src={product.image} alt="" />
+              ) : (
+                <span className="inventory-row__mark" aria-hidden="true">
+                  {product.name.slice(0, 1).toUpperCase()}
+                </span>
+              )}
               <div>
                 <h3>{product.name}</h3>
                 <p>{product.id}</p>

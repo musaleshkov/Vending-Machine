@@ -1,5 +1,6 @@
 import { formatMoney, totalCoins } from '../domain/money';
 import type { Coin, Product } from '../types';
+import { Icon } from './Icon';
 
 interface ProductCardProps {
   product: Product;
@@ -11,16 +12,19 @@ export function ProductCard({ product, insertedCoins, onBuy }: ProductCardProps)
   const balance = totalCoins(insertedCoins);
   const missing = Math.max(0, product.priceCents - balance);
   const isOutOfStock = product.quantity === 0;
-  const visual = productVisual(product.name);
+  const image = product.image ?? productEmoji(product.name);
 
   return (
     <article className={`product-card${isOutOfStock ? ' product-card--empty' : ''}`}>
+      <button
+        className="favorite-button"
+        type="button"
+        aria-label={`Add ${product.name} to favorites`}
+      >
+        ♡
+      </button>
       <div className="product-card__illustration" aria-hidden="true">
-        <div className={`product-pack product-pack--${visual.kind}`}>
-          <span className="product-pack__cap" />
-          <span className="product-pack__shine" />
-          <span className="product-pack__label">{visual.label}</span>
-        </div>
+        {product.image ? <img src={product.image} alt="" /> : <span>{image}</span>}
       </div>
       <div className="product-card__content">
         <div>
@@ -29,7 +33,9 @@ export function ProductCard({ product, insertedCoins, onBuy }: ProductCardProps)
         <p className="product-card__price">{formatMoney(product.priceCents)}</p>
         <p className="stock" data-empty={isOutOfStock}>
           {isOutOfStock ? 'Out of stock' : `In stock: ${product.quantity}`}
-          {!isOutOfStock && <span className="sr-only">{`${product.quantity} available`}</span>}
+          {!isOutOfStock && (
+            <span className="sr-only">{`${product.quantity} available`}</span>
+          )}
         </p>
       </div>
       <button
@@ -39,20 +45,20 @@ export function ProductCard({ product, insertedCoins, onBuy }: ProductCardProps)
         onClick={() => onBuy(product.id)}
         aria-label={`Buy ${product.name} for ${formatMoney(product.priceCents)}`}
       >
-        <span aria-hidden="true">🛒</span>{' '}
+        <Icon name="cart" size={16} />
         {isOutOfStock ? 'Unavailable' : missing > 0 ? 'Buy' : 'Buy'}
       </button>
     </article>
   );
 }
 
-function productVisual(name: string) {
+function productEmoji(name: string) {
   const value = name.toLowerCase();
-  if (value.includes('water')) return { kind: 'water', label: 'PURE' };
-  if (value.includes('juice')) return { kind: 'juice', label: '100%' };
-  if (value.includes('tea')) return { kind: 'tea', label: 'TEA' };
-  if (value.includes('chocolate')) return { kind: 'chocolate', label: 'CHOCO' };
-  if (value.includes('cracker')) return { kind: 'crackers', label: 'CRISP' };
-  if (value.includes('mix')) return { kind: 'mix', label: 'MIX' };
-  return { kind: 'default', label: name.slice(0, 5).toUpperCase() };
+  if (value.includes('water')) return '💧';
+  if (value.includes('juice')) return '🧃';
+  if (value.includes('tea')) return '🧋';
+  if (value.includes('chocolate')) return '🍫';
+  if (value.includes('cracker')) return '🥨';
+  if (value.includes('mix')) return '🥜';
+  return '🥤';
 }
