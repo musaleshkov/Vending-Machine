@@ -2,6 +2,7 @@
 
 A responsive React and TypeScript vending machine. Products are loaded from a mocked HTTP API, while product creation,
 editing, and deletion remain in the browser's application state.
+
 ![Preview_1](./Preview/Home_page.png)
 ![Preview_2](./Preview/completed_transaction.png)
 ![Preview_3](Preview/Manage_Inventory.png)
