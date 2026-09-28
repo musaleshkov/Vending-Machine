@@ -25,10 +25,26 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
   {
-    files: ['server/**/*.ts', 'scripts/**/*.mjs'],
+    files: ['server/**/*.ts'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      globals: globals.node,
+    },
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: ['scripts/**/*.mjs'],
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.node,

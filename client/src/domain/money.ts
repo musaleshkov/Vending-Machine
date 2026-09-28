@@ -1,4 +1,4 @@
-import { ACCEPTED_COINS, type Coin } from '../types';
+import { ACCEPTED_COINS, type Coin } from './coins';
 
 export const MINIMUM_COIN = ACCEPTED_COINS[0];
 
@@ -25,8 +25,15 @@ export function centsToEuros(cents: number): string {
 
 export function parsePriceToCents(input: string): number {
   const value = input.trim().replace(',', '.');
-  const [whole = '', fraction = ''] = value.split('.');
-  if (!/^\d+$/.test(whole)) {
+  const parts = value.split('.');
+  if (parts.length > 2) {
+    return 0;
+  }
+  const [whole = '', fraction = ''] = parts;
+  if (
+    !/^\d+$/.test(whole) ||
+    (fraction !== '' && (!/^\d+$/.test(fraction) || fraction.length > 2))
+  ) {
     return 0;
   }
   const euros = Number(whole);

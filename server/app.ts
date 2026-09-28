@@ -6,6 +6,15 @@ import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import express from 'express';
 
+async function readJson(path: string, message: string): Promise<unknown> {
+  try {
+    const source = await readFile(path, 'utf8');
+    return JSON.parse(source);
+  } catch (error) {
+    throw new Error(message, { cause: error });
+  }
+}
+
 export function createApp() {
   const app = express();
   const productsPath = fileURLToPath(new URL('./data/products.json', import.meta.url));
@@ -15,7 +24,6 @@ export function createApp() {
   const clientPath = fileURLToPath(new URL('../client', import.meta.url));
 
   app.use(cors());
-  app.use(express.json());
 
   app.get('/api/health', (_request, response) => {
     response.json({ status: 'ok' });
@@ -23,8 +31,7 @@ export function createApp() {
 
   app.get('/api/products', async (_request, response, next) => {
     try {
-      const source = await readFile(productsPath, 'utf8');
-      response.json(JSON.parse(source));
+      response.json(await readJson(productsPath, 'Unable to load products.'));
     } catch (error) {
       next(error);
     }
@@ -32,8 +39,7 @@ export function createApp() {
 
   app.get('/api/product-images', async (_request, response, next) => {
     try {
-      const source = await readFile(productImagesPath, 'utf8');
-      response.json(JSON.parse(source));
+      response.json(await readJson(productImagesPath, 'Unable to load product images.'));
     } catch (error) {
       next(error);
     }
@@ -55,11 +61,11 @@ export function createApp() {
       error: unknown,
       _request: express.Request,
       response: express.Response,
-      next: express.NextFunction,
+      _next: express.NextFunction,
     ) => {
-      void next;
       console.error(error);
-      response.status(500).json({ message: 'Unable to load products.' });
+      const message = error instanceof Error ? error.message : 'Internal server error.';
+      response.status(500).json({ message });
     },
   );
 

@@ -40,4 +40,21 @@ describe('CoinPanel', () => {
     expect(screen.getByText('Change tray')).toBeInTheDocument();
     expect(screen.getByText('€0.70')).toBeInTheDocument();
   });
+
+  it('removes an inserted coin', async () => {
+    const onRemove = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <CoinPanel
+        insertedCoins={[100, 20]}
+        returnedCoins={[]}
+        onInsert={() => {}}
+        onReset={() => {}}
+        onRemove={onRemove}
+      />,
+    );
+
+    await user.click(screen.getAllByRole('button', { name: /Remove .* coin/ })[0]!);
+    expect(onRemove).toHaveBeenCalledWith(0);
+  });
 });

@@ -16,13 +16,9 @@ export function ProductCard({ product, insertedCoins, onBuy }: ProductCardProps)
 
   return (
     <article className={`product-card${isOutOfStock ? ' product-card--empty' : ''}`}>
-      <button
-        className="favorite-button"
-        type="button"
-        aria-label={`Add ${product.name} to favorites`}
-      >
+      <span className="favorite-button" aria-hidden="true">
         ♡
-      </button>
+      </span>
       <div className="product-card__illustration" aria-hidden="true">
         {product.image ? <img src={product.image} alt="" /> : <span>{image}</span>}
       </div>
@@ -41,12 +37,16 @@ export function ProductCard({ product, insertedCoins, onBuy }: ProductCardProps)
       <button
         className="button button--primary button--full"
         type="button"
-        disabled={isOutOfStock}
+        disabled={isOutOfStock || missing > 0}
         onClick={() => onBuy(product.id)}
         aria-label={`Buy ${product.name} for ${formatMoney(product.priceCents)}`}
       >
         <Icon name="cart" size={16} />
-        {isOutOfStock ? 'Unavailable' : missing > 0 ? 'Buy' : 'Buy'}
+        {isOutOfStock
+          ? 'Unavailable'
+          : missing > 0
+            ? `Insert ${formatMoney(missing)} more`
+            : 'Buy'}
       </button>
     </article>
   );

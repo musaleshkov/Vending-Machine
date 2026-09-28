@@ -1,8 +1,13 @@
-export const ACCEPTED_COINS = [10, 20, 50, 100, 200] as const;
+import { ACCEPTED_COINS, type Cashbox, type Coin } from './domain/coins';
+import { PRODUCT_CATEGORIES, type ProductCategory } from './domain/productCategory';
 
-export type Coin = (typeof ACCEPTED_COINS)[number];
-
-export type Cashbox = Record<Coin, number>;
+export {
+  ACCEPTED_COINS,
+  type Cashbox,
+  type Coin,
+  PRODUCT_CATEGORIES,
+  type ProductCategory,
+};
 
 export interface Product {
   id: string;
@@ -13,11 +18,7 @@ export interface Product {
   image?: string;
 }
 
-export type ProductCategory = 'drinks' | 'snacks' | 'sweets';
-
 export type ProductDraft = Omit<Product, 'id'>;
-
-export type View = 'machine' | 'inventory';
 
 export type MessageKind = 'success' | 'error' | 'info';
 

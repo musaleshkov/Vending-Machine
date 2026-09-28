@@ -30,4 +30,12 @@ describe('fetchProductImages', () => {
 
     await expect(fetchProductImages()).rejects.toThrow('invalid response');
   });
+
+  it('throws when the request is not ok', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 500 }));
+
+    await expect(fetchProductImages()).rejects.toThrow(
+      'The product image catalog could not be loaded.',
+    );
+  });
 });

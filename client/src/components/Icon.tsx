@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 interface IconProps {
   name:
     | 'bag'
@@ -115,4 +117,3 @@ export function Icon({ name, size = 20 }: IconProps) {
     </svg>
   );
 }
-import type { ReactNode } from 'react';

@@ -1,5 +1,5 @@
-import { formatMoney, totalCoins } from '../domain/money';
-import type { Coin, Notice, Product } from '../types';
+import { formatMoney } from '../domain/money';
+import type { Coin, Notice } from '../types';
 
 export function coinRejected(): Notice {
   return { kind: 'error', text: 'That coin is not accepted.' };
@@ -15,16 +15,6 @@ export function productNotFound(): Notice {
 
 export function purchaseFailed(reason: string): Notice {
   return { kind: 'error', text: reason };
-}
-
-export function purchaseSucceeded(product: Product, change: readonly Coin[]): Notice {
-  return {
-    kind: 'success',
-    text:
-      change.length > 0
-        ? `${product.name} dispensed with ${formatMoney(totalCoins(change))} change.`
-        : `${product.name} dispensed with exact payment.`,
-  };
 }
 
 export function coinsReturned(count: number): Notice {

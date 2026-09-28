@@ -33,6 +33,10 @@ describe('vendingReducer', () => {
     });
     expect(state.products).toEqual(before.products);
     expect(state.insertedCoins).toEqual([50]);
+    expect(state.purchaseResult).toEqual({
+      kind: 'error',
+      message: 'Insert more money to buy this product.',
+    });
   });
 
   it('decrements stock and clears credit after a successful purchase', () => {
@@ -58,7 +62,11 @@ describe('vendingReducer', () => {
     );
     expect(state.products[0]!.quantity).toBe(2);
     expect(state.insertedCoins).toEqual([200]);
-    expect(state.notice?.text).toBe('The machine cannot return exact change.');
+    expect(state.notice).toBeNull();
+    expect(state.purchaseResult).toEqual({
+      kind: 'error',
+      message: 'The machine cannot return exact change.',
+    });
   });
 
   it('returns the inserted coins without changing products', () => {
@@ -83,5 +91,41 @@ describe('vendingReducer', () => {
     expect(added.products).toHaveLength(2);
     expect(updated.products.find(({ id }) => id === 'snack')?.quantity).toBe(5);
     expect(deleted.products).toEqual([water]);
+  });
+
+  it('removes an inserted coin by index', () => {
+    const state = vendingReducer(readyState({ insertedCoins: [100, 20] }), {
+      type: 'insertedCoinRemoved',
+      index: 0,
+    });
+    expect(state.insertedCoins).toEqual([20]);
+  });
+
+  it('tracks loading start and failure', () => {
+    const started = vendingReducer(readyState(), { type: 'productsLoadStarted' });
+    expect(started.loading).toBe(true);
+    expect(started.loadError).toBeNull();
+
+    const failed = vendingReducer(started, {
+      type: 'productsLoadFailed',
+      error: 'boom',
+    });
+    expect(failed.loading).toBe(false);
+    expect(failed.loadError).toBe('boom');
+  });
+
+  it('dismisses messages and purchase results', () => {
+    const withNotice = vendingReducer(readyState(), { type: 'coinInserted', coin: 100 });
+    expect(withNotice.notice).toBeTruthy();
+    expect(vendingReducer(withNotice, { type: 'messageDismissed' }).notice).toBeNull();
+
+    const purchased = vendingReducer(readyState({ insertedCoins: [100] }), {
+      type: 'purchaseRequested',
+      productId: 'water',
+    });
+    expect(purchased.purchaseResult).toBeTruthy();
+    expect(
+      vendingReducer(purchased, { type: 'purchaseResultDismissed' }).purchaseResult,
+    ).toBeNull();
   });
 });

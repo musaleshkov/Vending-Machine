@@ -1,4 +1,4 @@
-import { ACCEPTED_COINS, type Cashbox, type Coin } from '../types';
+import { ACCEPTED_COINS, type Cashbox, type Coin } from './coins';
 
 export const INITIAL_CASHBOX: Cashbox = {
   10: 12,

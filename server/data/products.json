@@ -7,9 +7,44 @@
     "category": "drinks",
     "image": "/products/sparkling-water.png"
   },
-  { "id": "orange-juice", "name": "Orange Juice", "priceCents": 140, "quantity": 8, "category": "drinks", "image": "/products/orange-juice.png" },
-  { "id": "chocolate-bar", "name": "Chocolate Bar", "priceCents": 180, "quantity": 6, "category": "sweets", "image": "/products/chocolate-bar.png" },
-  { "id": "trail-mix", "name": "Trail Mix", "priceCents": 230, "quantity": 5, "category": "snacks", "image": "/products/trail-mix.png" },
-  { "id": "iced-tea", "name": "Iced Tea", "priceCents": 160, "quantity": 0, "category": "drinks", "image": "/products/iced-tea.png" },
-  { "id": "crackers", "name": "Crackers", "priceCents": 120, "quantity": 12, "category": "snacks", "image": "/products/crackers.png" }
+  {
+    "id": "orange-juice",
+    "name": "Orange Juice",
+    "priceCents": 140,
+    "quantity": 8,
+    "category": "drinks",
+    "image": "/products/orange-juice.png"
+  },
+  {
+    "id": "chocolate-bar",
+    "name": "Chocolate Bar",
+    "priceCents": 180,
+    "quantity": 6,
+    "category": "sweets",
+    "image": "/products/chocolate-bar.png"
+  },
+  {
+    "id": "trail-mix",
+    "name": "Trail Mix",
+    "priceCents": 230,
+    "quantity": 5,
+    "category": "snacks",
+    "image": "/products/trail-mix.png"
+  },
+  {
+    "id": "iced-tea",
+    "name": "Iced Tea",
+    "priceCents": 160,
+    "quantity": 0,
+    "category": "drinks",
+    "image": "/products/iced-tea.png"
+  },
+  {
+    "id": "crackers",
+    "name": "Crackers",
+    "priceCents": 120,
+    "quantity": 12,
+    "category": "snacks",
+    "image": "/products/crackers.png"
+  }
 ]

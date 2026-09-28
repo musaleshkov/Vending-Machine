@@ -1,0 +1,17 @@
+:root {
+  --blue: #087cf1;
+  --danger: #ef3253;
+  --ink: #0b1d44;
+  --line: #dce8f5;
+  --muted: #6e7d9d;
+  --navy: #0a2252;
+  --page: #eff7ff;
+  --paper: #fff;
+  --shadow: 0 18px 50px rgba(34, 76, 145, 0.13);
+  --success: #18a968;
+  background: var(--page);
+  color: var(--ink);
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}

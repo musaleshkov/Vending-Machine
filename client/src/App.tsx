@@ -1,16 +1,23 @@
 import { useMemo, useReducer, useState } from 'react';
 
 import { CoinPanel } from './components/CoinPanel';
-import { Icon } from './components/Icon';
+import { Modal } from './components/Modal';
 import { ProductGrid } from './components/ProductGrid';
 import { ProductManager } from './components/ProductManager';
 import { PurchaseDialog } from './components/PurchaseDialog';
 import { SiteHeader } from './components/SiteHeader';
 import { Toast } from './components/Toast';
+import { Topbar } from './components/Topbar';
+import { inferCategory } from './domain/productCategory';
 import { createProductId } from './domain/productId';
 import { useProducts } from './hooks/useProducts';
 import { initialVendingState, vendingReducer } from './state/vendingReducer';
-import type { Coin, ProductCategory, ProductDraft } from './types';
+import {
+  type Coin,
+  PRODUCT_CATEGORIES,
+  type ProductCategory,
+  type ProductDraft,
+} from './types';
 
 export default function App() {
   const [state, dispatch] = useReducer(vendingReducer, initialVendingState);
@@ -40,46 +47,7 @@ export default function App() {
     <div className="app-shell">
       <SiteHeader onManage={() => setManagerOpen(true)} />
       <div className="workspace">
-        <header className="topbar">
-          <button className="mobile-menu" type="button" aria-label="Open menu">
-            <Icon name="menu" />
-          </button>
-          <div className="mobile-brand">
-            <span className="brand__mark">
-              <Icon name="box" size={17} />
-            </span>
-            <strong>Vending Machine</strong>
-          </div>
-          <div className="topbar__intro">
-            <h1>Vending Machine</h1>
-            <p>Grab your favorite snacks and drinks</p>
-          </div>
-          <label className="search-box">
-            <span className="sr-only">Search products</span>
-            <Icon name="search" size={18} />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search products..."
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery('')}
-                aria-label="Clear search"
-              >
-                <Icon name="x" size={15} />
-              </button>
-            )}
-          </label>
-          <button className="icon-button" type="button" aria-label="Notifications">
-            <Icon name="bell" size={19} />
-            <span className="notification-dot" />
-          </button>
-          <span className="avatar" aria-label="User profile">
-            VM
-          </span>
-        </header>
+        <Topbar query={query} onQueryChange={setQuery} />
 
         <main id="main-content">
           {state.notice && (
@@ -97,7 +65,7 @@ export default function App() {
                   <p>Choose your favorite item</p>
                 </div>
                 <div className="filter-chips" aria-label="Product categories">
-                  {(['all', 'drinks', 'snacks', 'sweets'] as const).map((item) => (
+                  {(['all', ...PRODUCT_CATEGORIES] as const).map((item) => (
                     <button
                       key={item}
                       type="button"
@@ -156,32 +124,28 @@ export default function App() {
           </section>
 
           {managerOpen && (
-            <div className="modal-backdrop manager-backdrop" role="presentation">
-              <div
-                className="manager-dialog"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="manager-title"
+            <Modal
+              labelledBy="manager-title"
+              onClose={() => setManagerOpen(false)}
+              backdropClassName="manager-backdrop"
+              dialogClassName="manager-dialog"
+            >
+              <button
+                className="modal-close"
+                type="button"
+                onClick={() => setManagerOpen(false)}
+                aria-label="Close inventory management"
               >
-                <button
-                  className="modal-close"
-                  type="button"
-                  onClick={() => setManagerOpen(false)}
-                  aria-label="Close inventory management"
-                >
-                  ×
-                </button>
-                <ProductManager
-                  products={state.products}
-                  cashbox={state.cashbox}
-                  onAdd={addProduct}
-                  onUpdate={(product) => dispatch({ type: 'productUpdated', product })}
-                  onDelete={(productId) =>
-                    dispatch({ type: 'productDeleted', productId })
-                  }
-                />
-              </div>
-            </div>
+                ×
+              </button>
+              <ProductManager
+                products={state.products}
+                cashbox={state.cashbox}
+                onAdd={addProduct}
+                onUpdate={(product) => dispatch({ type: 'productUpdated', product })}
+                onDelete={(productId) => dispatch({ type: 'productDeleted', productId })}
+              />
+            </Modal>
           )}
 
           {state.purchaseResult && (
@@ -198,16 +162,4 @@ export default function App() {
       </div>
     </div>
   );
-}
-
-function inferCategory(product: {
-  name: string;
-  category?: ProductCategory;
-}): ProductCategory {
-  if (product.category) return product.category;
-  const name = product.name.toLowerCase();
-  if (name.includes('water') || name.includes('juice') || name.includes('tea'))
-    return 'drinks';
-  if (name.includes('chocolate')) return 'sweets';
-  return 'snacks';
 }

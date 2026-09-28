@@ -72,7 +72,7 @@ export function vendingReducer(state: VendingState, action: VendingAction): Vend
       if (!product) {
         return {
           ...state,
-          notice: productNotFound(),
+          notice: null,
           purchaseResult: { kind: 'error', message: productNotFound().text },
         };
       }
@@ -80,7 +80,7 @@ export function vendingReducer(state: VendingState, action: VendingAction): Vend
       if (!result.success) {
         return {
           ...state,
-          notice: purchaseFailed(result.reason),
+          notice: null,
           purchaseResult: { kind: 'error', message: purchaseFailed(result.reason).text },
         };
       }

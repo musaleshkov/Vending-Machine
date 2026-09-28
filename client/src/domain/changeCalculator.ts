@@ -1,4 +1,4 @@
-import { ACCEPTED_COINS, type Cashbox, type Coin } from '../types';
+import { ACCEPTED_COINS, type Cashbox, type Coin } from './coins';
 
 const DESCENDING_COINS = [...ACCEPTED_COINS].sort((a, b) => b - a);
 

@@ -56,4 +56,13 @@ describe('mock API', () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ message: 'Unable to load products.' });
   });
+
+  it('returns a 500 when the product image source cannot be read', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.mocked(readFile).mockRejectedValueOnce(new Error('boom'));
+    const app = createApp();
+    const response = await request(app).get('/api/product-images');
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ message: 'Unable to load product images.' });
+  });
 });

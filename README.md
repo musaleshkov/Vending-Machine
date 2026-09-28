@@ -92,12 +92,14 @@ successful purchase, and returned change is removed from it.
 ## Project structure
 
 ```text
-client/src/api         HTTP client
-client/src/components  React interface
-client/src/domain      Money, validation, change, and purchase rules
-client/src/state       Reducer and application state
-server/data            Initial product data
-server/index.ts        Mock HTTP API
+client/src/api         HTTP clients and a shared fetchJson helper
+client/src/components  React interface, including a reusable accessible Modal
+client/src/domain      Money, coins, validation, change, and purchase rules
+client/src/hooks       React hooks (product loading)
+client/src/state       Reducer, actions, and notification builders
+client/src/styles      Split stylesheets (tokens, base, layout, components, responsive)
+server/data            Initial product and product-image data
+server/index.ts        Mock HTTP API entry point
 ```
 
 ## Verification

@@ -7,7 +7,12 @@ import {
   validateProduct,
   type ValidationResult,
 } from '../domain/productValidation';
-import type { Product, ProductDraft } from '../types';
+import {
+  type Product,
+  PRODUCT_CATEGORIES,
+  type ProductCategory,
+  type ProductDraft,
+} from '../types';
 
 interface ProductFormProps {
   product?: Product;
@@ -15,7 +20,12 @@ interface ProductFormProps {
   onCancel?: () => void;
 }
 
-const EMPTY_DRAFT: ProductDraft = { name: '', priceCents: 100, quantity: 1 };
+const EMPTY_DRAFT: ProductDraft = {
+  name: '',
+  priceCents: 100,
+  quantity: 1,
+  category: 'snacks',
+};
 
 export function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
   const [draft, setDraft] = useState<ProductDraft>(
@@ -24,7 +34,7 @@ export function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
           name: product.name,
           priceCents: product.priceCents,
           quantity: product.quantity,
-          category: product.category,
+          category: product.category ?? 'snacks',
           image: product.image,
         }
       : EMPTY_DRAFT,
@@ -165,6 +175,23 @@ export function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
             {errors.quantity}
           </span>
         )}
+      </div>
+
+      <div className="field">
+        <label htmlFor="product-category">Category</label>
+        <select
+          id="product-category"
+          value={draft.category ?? 'snacks'}
+          onChange={(event) =>
+            setDraft({ ...draft, category: event.target.value as ProductCategory })
+          }
+        >
+          {PRODUCT_CATEGORIES.map((category) => (
+            <option key={category} value={category}>
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-actions">

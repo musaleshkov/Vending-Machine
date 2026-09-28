@@ -54,6 +54,12 @@ describe('parsePriceToCents', () => {
     expect(parsePriceToCents('')).toBe(0);
     expect(parsePriceToCents('abc')).toBe(0);
   });
+
+  it('rejects multiple decimal points and non-numeric fractions', () => {
+    expect(parsePriceToCents('1.5.5')).toBe(0);
+    expect(parsePriceToCents('1.abc')).toBe(0);
+    expect(parsePriceToCents('1.109')).toBe(0);
+  });
 });
 
 describe('MINIMUM_COIN', () => {

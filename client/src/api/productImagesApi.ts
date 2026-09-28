@@ -1,3 +1,5 @@
+import { fetchJson } from './fetchJson';
+
 export interface ProductImageOption {
   id: string;
   label: string;
@@ -7,12 +9,12 @@ export interface ProductImageOption {
 export async function fetchProductImages(
   signal?: AbortSignal,
 ): Promise<ProductImageOption[]> {
-  const response = await fetch('/api/product-images', { signal });
-  if (!response.ok) {
-    throw new Error('The product image catalog could not be loaded.');
-  }
+  const data = await fetchJson(
+    '/api/product-images',
+    'The product image catalog could not be loaded.',
+    signal,
+  );
 
-  const data: unknown = await response.json();
   if (!Array.isArray(data) || !data.every(isProductImageOption)) {
     throw new Error('The product image catalog returned an invalid response.');
   }
